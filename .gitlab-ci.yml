@@ -4,7 +4,7 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - build/
-    - .gradlew/
+    - .gradle/
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -16,10 +16,16 @@ stages:
 
 compile:
   stage: build
+  only:
+    changes:
+      - "src/main/**/*"
   script: ./gradlew build
 
 documentation:
   stage: build
+  only:
+    changes:
+      - "src/**/*"
   script: ./gradlew dokka
 
 runTests:
@@ -32,6 +38,8 @@ publishToPackages:
     refs:
       - master
     changes:
-      - src/main/**/*
+      - "src/main/**/*"
       - build.gradle.kts
+  except:
+    - merge_requets
   script: ./gradlew publish
