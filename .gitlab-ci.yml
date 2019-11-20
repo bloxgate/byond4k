@@ -1,0 +1,30 @@
+image: openjdk8
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - build/
+
+stages:
+  - build
+  - test
+  - publish
+
+compile:
+  stage: build
+  script: ./gradlew build
+
+documentation:
+  stage: build
+  script: ./gradlew dokka
+
+runTests:
+  stage: test
+  script: ./gradlew test
+
+publishToPackages:
+  stage: publish
+  only:
+    refs:
+      - master
+  script: ./gradlew publish
