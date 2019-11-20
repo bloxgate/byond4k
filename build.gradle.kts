@@ -18,26 +18,6 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 }
 
-publishing {
-    repositories {
-        maven {
-            name = "GithubPackages"
-            url = uri("https://maven.pkg.github.com/bloxgate/byond4k")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
-                password = project.findProperty("gpr.token") as String? ?: System.getenv("GPR_TOKEN")
-            }
-        }
-    }
-
-    publications {
-        register("gpr", MavenPublication::class) {
-            from(components["java"])
-            artifact("documentationJar")
-        }
-    }
-}
-
 tasks {
     compileKotlin {
         kotlinOptions.jvmTarget = "1.8"
@@ -56,4 +36,24 @@ val documentationJar by tasks.creating(Jar::class) {
     description = "Documentation files"
     archiveClassifier.set("javadoc")
     from(tasks.dokka)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = uri("https://maven.pkg.github.com/bloxgate/byond4k")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
+                password = project.findProperty("gpr.token") as String? ?: System.getenv("GPR_TOKEN")
+            }
+        }
+    }
+
+    publications {
+        register("gpr", MavenPublication::class) {
+            from(components["java"])
+            artifact(documentationJar)
+        }
+    }
 }
