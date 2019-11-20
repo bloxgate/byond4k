@@ -1,4 +1,4 @@
-image: openjdk8
+image: openjdk:8
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
